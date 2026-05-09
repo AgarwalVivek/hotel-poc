@@ -23,7 +23,9 @@ function loadDashboard() {
   const rooms = DB.rooms.getAll();
   const enquiries = DB.enquiries.getAll();
   const newEnq = enquiries.filter(e => e.status === 'new');
-  const avgPrice = rooms.length ? Math.round(rooms.reduce((s, r) => s + r.price, 0) / rooms.length) : 0;
+  const avgPrice = rooms.length
+    ? Math.round(rooms.reduce((s, r) => s + r.price, 0) / rooms.length)
+    : 0;
 
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card">
@@ -49,17 +51,28 @@ function loadDashboard() {
   `;
 
   const recent = enquiries.slice(0, 5);
-  document.getElementById('recent-enquiries').innerHTML = recent.length === 0
-    ? '<p style="color:var(--muted);font-size:0.875rem">No enquiries yet.</p>'
-    : recent.map(e => `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--border)">
-        <div>
-          <div style="font-weight:500;font-size:0.9rem">${e.name}</div>
-          <div style="font-size:0.8rem;color:var(--muted)">${e.email} — ${e.roomType || 'any room'}</div>
+  document.getElementById('recent-enquiries').innerHTML =
+    recent.length === 0
+      ? '<p style="color:var(--muted);font-size:0.875rem">No enquiries yet.</p>'
+      : recent.map(e => `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-weight:500;font-size:0.9rem">${e.name}</div>
+            <div style="font-size:0.8rem;color:var(--muted)">
+              ${e.email} — ${e.roomType || 'any room'}
+            </div>
+            <div style="font-size:0.8rem;color:var(--muted)">
+              📅 ${e.checkin || '—'} → ${e.checkout || '—'}
+            </div>
+            ${e.message ? `
+              <div style="margin-top:0.35rem;font-size:0.82rem;color:#333;font-style:italic;">
+                "${e.message}"
+              </div>
+            ` : ''}
+          </div>
+          <span class="badge badge--${e.status}">${e.status}</span>
         </div>
-        <span class="badge badge--${e.status}">${e.status}</span>
-      </div>
-    `).join('');
+      `).join('');
 }
 
 // ── Rooms Tab ────────────────────────────────────────────
@@ -67,9 +80,13 @@ function hardResetRooms() {
   if (confirm('This will reload all room data and restore photo links. Any custom rooms you added will be removed. Continue?')) {
     DB.rooms.reset();
     loadRoomsTab();
+
     const msg = document.getElementById('reset-msg');
     msg.style.display = 'block';
-    setTimeout(() => { msg.style.display = 'none'; }, 8000);
+
+    setTimeout(() => {
+      msg.style.display = 'none';
+    }, 8000);
   }
 }
 
@@ -78,7 +95,8 @@ function loadRoomsTab() {
   const container = document.getElementById('rooms-admin-list');
 
   if (rooms.length === 0) {
-    container.innerHTML = '<div class="admin-card"><p style="color:var(--muted)">No rooms yet.</p></div>';
+    container.innerHTML =
+      '<div class="admin-card"><p style="color:var(--muted)">No rooms yet.</p></div>';
     return;
   }
 
@@ -113,7 +131,9 @@ function loadRoomsTab() {
                   <button class="action-btn" onclick="toggleAvailability('${r.id}', ${!r.available})">
                     ${r.available ? 'Disable' : 'Enable'}
                   </button>
-                  <button class="action-btn action-btn--danger" onclick="deleteRoom('${r.id}')">Delete</button>
+                  <button class="action-btn action-btn--danger" onclick="deleteRoom('${r.id}')">
+                    Delete
+                  </button>
                 </div>
               </td>
             </tr>
@@ -139,6 +159,7 @@ function deleteRoom(id) {
 function editRoom(id) {
   const r = DB.rooms.getById(id);
   if (!r) return;
+
   document.getElementById('edit-id').value = r.id;
   document.getElementById('r-name').value = r.name;
   document.getElementById('r-type').value = r.type;
@@ -152,14 +173,16 @@ function editRoom(id) {
   document.getElementById('r-inclusions').value = (r.inclusions || []).join(', ');
   document.getElementById('r-badge').value = r.badge || '';
   document.getElementById('r-available').checked = r.available;
+
   showTab('add-room');
 }
 
 // ── Add / Edit Room form ─────────────────────────────────
-document.getElementById('room-form').addEventListener('submit', function(e) {
+document.getElementById('room-form').addEventListener('submit', function (e) {
   e.preventDefault();
 
-  const splitByComma = val => val.split(',').map(s => s.trim()).filter(Boolean);
+  const splitByComma = val =>
+    val.split(',').map(s => s.trim()).filter(Boolean);
 
   const data = {
     name: document.getElementById('r-name').value,
@@ -177,6 +200,7 @@ document.getElementById('room-form').addEventListener('submit', function(e) {
   };
 
   const editId = document.getElementById('edit-id').value;
+
   if (editId) {
     DB.rooms.update(editId, data);
   } else {
@@ -185,7 +209,11 @@ document.getElementById('room-form').addEventListener('submit', function(e) {
 
   const msg = document.getElementById('room-save-msg');
   msg.style.display = 'block';
-  setTimeout(() => { msg.style.display = 'none'; }, 3000);
+
+  setTimeout(() => {
+    msg.style.display = 'none';
+  }, 3000);
+
   clearRoomForm();
 });
 
@@ -200,32 +228,51 @@ function loadEnquiriesTab() {
   const container = document.getElementById('enquiries-list');
 
   if (enquiries.length === 0) {
-    container.innerHTML = '<div class="admin-card"><p style="color:var(--muted)">No enquiries yet. They will appear here when guests submit the contact form.</p></div>';
+    container.innerHTML =
+      '<div class="admin-card"><p style="color:var(--muted)">No enquiries yet. They will appear here when guests submit the contact form.</p></div>';
     return;
   }
 
   container.innerHTML = enquiries.map(e => {
-    const date = new Date(e.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    const date = new Date(e.date).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+
     return `
       <div class="enquiry-item">
         <div class="enquiry-item__header">
           <div>
             <span class="enquiry-item__name">${e.name}</span>
-            <span class="badge badge--${e.status}" style="margin-left:0.75rem">${e.status}</span>
+            <span class="badge badge--${e.status}" style="margin-left:0.75rem">
+              ${e.status}
+            </span>
           </div>
+
           <div class="action-btns">
-            <button class="action-btn" onclick="DB.enquiries.updateStatus('${e.id}','read');loadEnquiriesTab()">Mark Read</button>
-            <button class="action-btn" onclick="DB.enquiries.updateStatus('${e.id}','closed');loadEnquiriesTab()">Close</button>
-            <button class="action-btn action-btn--danger" onclick="DB.enquiries.delete('${e.id}');loadEnquiriesTab()">Delete</button>
+            <button class="action-btn" onclick="DB.enquiries.updateStatus('${e.id}','read');loadEnquiriesTab()">
+              Mark Read
+            </button>
+            <button class="action-btn" onclick="DB.enquiries.updateStatus('${e.id}','closed');loadEnquiriesTab()">
+              Close
+            </button>
+            <button class="action-btn action-btn--danger" onclick="DB.enquiries.delete('${e.id}');loadEnquiriesTab()">
+              Delete
+            </button>
           </div>
         </div>
+
         <div class="enquiry-item__meta">
           📧 <a href="mailto:${e.email}" style="color:inherit">${e.email}</a>
           &nbsp;|&nbsp; 📅 Check-in: ${e.checkin || '—'} → ${e.checkout || '—'}
           &nbsp;|&nbsp; 🛏️ ${e.roomType || 'Any room'}
           &nbsp;|&nbsp; Received: ${date}
         </div>
-        ${e.message ? `<div class="enquiry-item__msg">"${e.message}"</div>` : ''}
+
+        ${e.message
+          ? `<div class="enquiry-item__msg">"${e.message}"</div>`
+          : ''}
       </div>
     `;
   }).join('');
