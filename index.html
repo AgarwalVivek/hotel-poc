@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Golden Sun — Jharsuguda</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="navbar">
+    <div class="nav__logo">
+      <span class="nav__logo-top">THE GOLDEN SUN</span>
+      <span class="nav__logo-sub">JHARSUGUDA</span>
+    </div>
+    <ul class="nav__links">
+      <li><a href="#rooms">Rooms</a></li>
+      <li><a href="#amenities">Amenities</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="admin.html" class="nav__admin">Admin</a></li>
+    </ul>
+    <button class="nav__burger" id="burger" aria-label="Menu">&#9776;</button>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <p class="hero__eyebrow">Welcome to</p>
+      <h1 class="hero__title">A Palace<br /><em>of Serenity</em></h1>
+      <p class="hero__sub">Experience the finest luxury hospitality in the heart of Jharsuguda</p>
+      <a href="#rooms" class="btn btn--light">Explore Rooms</a>
+    </div>
+    <div class="hero__scroll">scroll</div>
+  </header>
+
+  <!-- ROOMS SECTION -->
+  <section class="section" id="rooms">
+    <div class="section__header">
+      <p class="section__eyebrow">Our Collection</p>
+      <h2 class="section__title">Rooms & Suites</h2>
+      <p class="section__desc">Each room is a sanctuary — designed with heritage craft and modern luxury.</p>
+    </div>
+    <div class="rooms-filter">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="standard">Standard</button>
+      <button class="filter-btn" data-filter="deluxe">Deluxe</button>
+      <button class="filter-btn" data-filter="suite">Suite</button>
+    </div>
+    <div class="rooms-grid" id="rooms-grid"></div>
+  </section>
+
+  <!-- AMENITIES -->
+  <section class="section section--dark" id="amenities">
+    <div class="section__header">
+      <p class="section__eyebrow">The Experience</p>
+      <h2 class="section__title">World-Class Amenities</h2>
+    </div>
+    <div class="amenities-grid">
+      <div class="amenity-card">
+        <div class="amenity-card__icon">🍽️</div>
+        <h3>Fine Dining</h3>
+        <p>Multi-cuisine restaurant with curated menus by award-winning chefs.</p>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-card__icon">♨️</div>
+        <h3>Spa & Wellness</h3>
+        <p>Full-service spa with Ayurvedic treatments and heated pool.</p>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-card__icon">🏋️</div>
+        <h3>Fitness Centre</h3>
+        <p>State-of-the-art gymnasium open 24 hours for our guests.</p>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-card__icon">🎪</div>
+        <h3>Banquet Hall</h3>
+        <p>Grand venue for weddings, conferences, and private events.</p>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-card__icon">🌿</div>
+        <h3>Garden Terrace</h3>
+        <p>Landscaped gardens for morning walks and evening gatherings.</p>
+      </div>
+      <div class="amenity-card">
+        <div class="amenity-card__icon">🚗</div>
+        <h3>Valet Parking</h3>
+        <p>Complimentary valet service and airport transfers available.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / DIRECTOR -->
+  <section class="section" id="about">
+    <div class="section__header">
+      <p class="section__eyebrow">Leadership</p>
+      <h2 class="section__title">Meet Our Director</h2>
+    </div>
+    <div class="about-layout">
+      <div class="director-photo-wrap">
+        <img src="images/director.png" alt="Subhashish Agarwal — Director" class="director-photo" />
+        <div class="director-photo-accent"></div>
+      </div>
+      <div class="director-info">
+        <p class="director-eyebrow">Director</p>
+        <h2 class="director-name">Subhashish Agarwal</h2>
+        <p class="director-location">📍 Goshala, Sambalpur</p>
+        <div class="director-divider"></div>
+        <p class="director-bio">
+          With a passion for hospitality and a commitment to excellence, Subhashish Agarwal leads The Golden Sun with a vision to bring world-class luxury to the heart of Odisha. Under his direction, the hotel has grown into a landmark of refined comfort and warm service in Jharsuguda.
+        </p>
+        <p class="director-bio">
+          His dedication to guest experience, rooted in the traditions of Odishan hospitality, ensures every visitor feels truly at home — pampered and valued from arrival to departure.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section section--ivory" id="contact">
+    <div class="section__header">
+      <p class="section__eyebrow">Reach Us</p>
+      <h2 class="section__title">Contact & Booking</h2>
+    </div>
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="contact-info__item">
+          <span class="contact-info__label">Address</span>
+          <span>Goshala, Sambalpur,<br />Odisha, India</span>
+        </div>
+        <div class="contact-info__item">
+          <span class="contact-info__label">Phone</span>
+          <a href="tel:+917894499872">+91 7894499872</a>
+        </div>
+        <div class="contact-info__item">
+          <span class="contact-info__label">Email</span>
+          <a href="mailto:official@thegoldensun.in">official@thegoldensun.in</a>
+        </div>
+        <div class="contact-info__item">
+          <span class="contact-info__label">Check-in / Check-out</span>
+          <span>2:00 PM / 12:00 PM</span>
+        </div>
+      </div>
+      <form class="contact-form" id="contact-form">
+        <h3 class="contact-form__title">Send an Enquiry</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="checkin">Check-in</label>
+            <input type="date" id="checkin" required />
+          </div>
+          <div class="form-group">
+            <label for="checkout">Check-out</label>
+            <input type="date" id="checkout" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="room-type">Room Type</label>
+          <select id="room-type">
+            <option value="">Select a room type</option>
+            <option value="standard">Standard Room</option>
+            <option value="deluxe">Deluxe Room</option>
+            <option value="suite">Suite</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" rows="3" placeholder="Any special requests..."></textarea>
+        </div>
+        <button type="submit" class="btn btn--dark">Send Enquiry</button>
+        <p class="form-success" id="form-success">✓ Enquiry sent! We'll get back to you within 24 hours.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__logo">THE GOLDEN SUN</div>
+    <p class="footer__tag">Luxury Redefined · Jharsuguda</p>
+    <div class="footer__info">
+      <span>Goshala, Sambalpur, Odisha, India</span>
+      <span class="footer__dot">·</span>
+      <a href="tel:+917894499872">+91 7894499872</a>
+      <span class="footer__dot">·</span>
+      <a href="mailto:official@thegoldensun.in">official@thegoldensun.in</a>
+    </div>
+    <div class="footer__director">
+      Director: Subhashish Agarwal
+    </div>
+    <p class="footer__copy">&copy; 2025 The Golden Sun, Jharsuguda. All rights reserved.</p>
+  </footer>
+
+  <!-- ROOM MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal__close" id="modal-close">&times;</button>
+      <div class="modal__content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="js/db.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

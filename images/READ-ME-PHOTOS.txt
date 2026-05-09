@@ -1,0 +1,23 @@
+ROOM PHOTO GUIDE
+================
+
+Download photos from unsplash.com or pexels.com and save them
+into this "images/" folder with EXACTLY these filenames:
+
+  room-r001.webp  →  Classic Heritage Room      (search: "luxury hotel heritage room")
+  room-r002.webp  →  Deluxe Pool View Room      (search: "hotel room pool view balcony")
+  room-r003.webp  →  Deluxe City View Room      (search: "hotel twin room city view")
+  room-r004.webp  →  Royal Suite                (search: "hotel royal suite living room")
+  room-r005.webp  →  Presidential Suite         (search: "presidential suite luxury hotel")
+  room-r006.webp  →  Standard Twin Room         (search: "standard hotel twin room clean")
+
+TIPS:
+- JPG or PNG both work (just keep the filename as .webp or rename to .png
+  and update the "image" field in js/db.js accordingly)
+- Recommended size: 1200x800px or larger, landscape orientation
+- If a photo is missing, the website will automatically show
+  the emoji icon instead — no errors
+
+GOOD FREE SOURCES:
+  https://unsplash.com  (search "hotel room luxury")
+  https://pexels.com    (search "hotel bedroom interior")

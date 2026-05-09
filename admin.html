@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Mayfair Grand</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <span class="sidebar__logo-top">MAYFAIR</span>
+        <span class="sidebar__logo-sub">Admin Panel</span>
+      </div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="sidebar__link" data-tab="rooms">🛏️ Rooms</button>
+        <button class="sidebar__link" data-tab="enquiries">📩 Enquiries</button>
+        <button class="sidebar__link" data-tab="add-room">➕ Add Room</button>
+      </nav>
+      <a href="index.html" class="sidebar__back">← Back to Website</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+      <!-- DASHBOARD TAB -->
+      <section class="tab-pane active" id="tab-dashboard">
+        <h1 class="admin-title">Dashboard</h1>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="admin-card">
+          <h3 class="admin-card__title">Recent Enquiries</h3>
+          <div id="recent-enquiries"></div>
+        </div>
+      </section>
+
+      <!-- ROOMS TAB -->
+      <section class="tab-pane" id="tab-rooms">
+        <h1 class="admin-title">Manage Rooms</h1>
+        <div class="admin-toolbar">
+          <button class="btn btn--dark" style="width:auto;padding:0.6rem 1.5rem" onclick="showTab('add-room')">+ Add New Room</button>
+          <button class="btn btn--outline" style="padding:0.6rem 1.5rem" onclick="hardResetRooms()">&#128260; Reload Room Data</button>
+        </div>
+        <div id="reset-msg" style="display:none;background:#EAF3DE;border:1px solid #C0DD97;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.875rem;color:#3B6D11;">
+          Room data reloaded! Photos should now appear. <a href="index.html" target="_blank" style="color:#3B6D11;font-weight:500;">Open website to check</a>
+        </div>
+        <div id="rooms-admin-list"></div>
+      </section>
+
+      <!-- ENQUIRIES TAB -->
+      <section class="tab-pane" id="tab-enquiries">
+        <h1 class="admin-title">Enquiries</h1>
+        <div id="enquiries-list"></div>
+      </section>
+
+      <!-- ADD ROOM TAB -->
+      <section class="tab-pane" id="tab-add-room">
+        <h1 class="admin-title">Add / Edit Room</h1>
+        <div class="admin-card">
+          <form id="room-form">
+            <input type="hidden" id="edit-id" />
+            <div class="form-row">
+              <div class="form-group">
+                <label>Room Name</label>
+                <input type="text" id="r-name" placeholder="e.g. Royal Heritage Suite" required />
+              </div>
+              <div class="form-group">
+                <label>Type</label>
+                <select id="r-type">
+                  <option value="standard">Standard</option>
+                  <option value="deluxe">Deluxe</option>
+                  <option value="suite">Suite</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Price per Night (INR)</label>
+                <input type="number" id="r-price" placeholder="5000" required />
+              </div>
+              <div class="form-group">
+                <label>Size</label>
+                <input type="text" id="r-size" placeholder="e.g. 38 sqm" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Bed Configuration</label>
+                <input type="text" id="r-beds" placeholder="e.g. 1 King" />
+              </div>
+              <div class="form-group">
+                <label>Max Guests</label>
+                <input type="number" id="r-capacity" placeholder="2" min="1" max="10" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Emoji Icon</label>
+              <input type="text" id="r-icon" placeholder="e.g. 🛏️" />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="r-desc" rows="3" placeholder="Room description..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Features (comma separated)</label>
+              <input type="text" id="r-features" placeholder="King Bed, Pool View, Balcony" />
+            </div>
+            <div class="form-group">
+              <label>Inclusions (comma separated)</label>
+              <input type="text" id="r-inclusions" placeholder="Breakfast, Wi-Fi, Housekeeping" />
+            </div>
+            <div class="form-group">
+              <label>Badge (optional)</label>
+              <input type="text" id="r-badge" placeholder="e.g. Most Popular" />
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                <input type="checkbox" id="r-available" checked style="width:auto" /> Available
+              </label>
+            </div>
+            <div style="display:flex;gap:1rem;margin-top:1rem">
+              <button type="submit" class="btn btn--dark" style="width:auto;padding:0.75rem 2rem">Save Room</button>
+              <button type="button" class="btn btn--outline" style="padding:0.75rem 2rem" onclick="clearRoomForm()">Clear</button>
+            </div>
+            <p id="room-save-msg" style="display:none;color:#2a7c4f;margin-top:0.75rem;font-size:0.875rem">✓ Room saved successfully!</p>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/db.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
