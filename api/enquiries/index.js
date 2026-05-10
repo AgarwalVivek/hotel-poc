@@ -46,7 +46,7 @@ module.exports = async function (context, req) {
 
     const enquiry = {
       id: `enq_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      partitionKey: "enquiry",
+      partitionkey: "enquiry",
       name,
       email,
       phone: sanitizeText(body.phone),
