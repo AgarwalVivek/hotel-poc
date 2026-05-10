@@ -2,6 +2,40 @@
  * admin.js — Admin Panel Logic
  */
 
+// ── Cosmos DB enquiries cache ────────────────────────────
+let _cosmosEnquiries = null;
+let _cosmosLoading = false;
+
+async function fetchCosmosEnquiries(forceRefresh = false) {
+  if (_cosmosEnquiries && !forceRefresh) return _cosmosEnquiries;
+  if (_cosmosLoading) return _cosmosEnquiries || [];
+
+  _cosmosLoading = true;
+  try {
+    const res = await fetch('/api/enquiries');
+    const data = await res.json();
+    if (data.success && Array.isArray(data.enquiries)) {
+      _cosmosEnquiries = data.enquiries;
+    } else {
+      console.warn('Cosmos fetch failed, falling back to localStorage');
+      _cosmosEnquiries = null;
+    }
+  } catch (err) {
+    console.warn('Could not reach API, falling back to localStorage:', err.message);
+    _cosmosEnquiries = null;
+  } finally {
+    _cosmosLoading = false;
+  }
+  return _cosmosEnquiries;
+}
+
+function getEnquiries() {
+  return _cosmosEnquiries || DB.enquiries.getAll();
+}
+
+// Fetch from Cosmos DB immediately on admin load
+fetchCosmosEnquiries().then(() => loadDashboard());
+
 // ── Tab navigation ───────────────────────────────────────
 function showTab(name) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -11,7 +45,7 @@ function showTab(name) {
 
   if (name === 'dashboard') loadDashboard();
   if (name === 'rooms') loadRoomsTab();
-  if (name === 'enquiries') loadEnquiriesTab();
+  if (name === 'enquiries') { fetchCosmosEnquiries(true).then(() => loadEnquiriesTab()); }
 }
 
 document.querySelectorAll('.sidebar__link').forEach(btn => {
@@ -21,7 +55,7 @@ document.querySelectorAll('.sidebar__link').forEach(btn => {
 // ── Dashboard ────────────────────────────────────────────
 function loadDashboard() {
   const rooms = DB.rooms.getAll();
-  const enquiries = DB.enquiries.getAll();
+  const enquiries = getEnquiries();
   const newEnq = enquiries.filter(e => e.status === 'new');
   const avgPrice = rooms.length
     ? Math.round(rooms.reduce((s, r) => s + r.price, 0) / rooms.length)
@@ -224,7 +258,7 @@ function clearRoomForm() {
 
 // ── Enquiries Tab ────────────────────────────────────────
 function loadEnquiriesTab() {
-  const enquiries = DB.enquiries.getAll();
+  const enquiries = getEnquiries();
   const container = document.getElementById('enquiries-list');
 
   if (enquiries.length === 0) {
@@ -234,7 +268,7 @@ function loadEnquiriesTab() {
   }
 
   container.innerHTML = enquiries.map(e => {
-    const date = new Date(e.date).toLocaleDateString('en-IN', {
+    const date = new Date(e.createdAt || e.date).toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric'
@@ -279,4 +313,4 @@ function loadEnquiriesTab() {
 }
 
 // ── Init ─────────────────────────────────────────────────
-loadDashboard();
+// Initial loadDashboard is triggered by fetchCosmosEnquiries().then() at the top

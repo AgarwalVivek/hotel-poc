@@ -27,62 +27,84 @@ function sanitizeText(value) {
 
 module.exports = async function (context, req) {
   try {
-    const body = req.body || {};
-
-    const name = sanitizeText(body.name);
-    const email = sanitizeText(body.email);
-
-    if (!name || !email) {
-      context.res = {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-        body: {
-          success: false,
-          error: "Name and email are required."
-        }
-      };
-      return;
+    if (req.method === "GET") {
+      return handleGet(context, req);
     }
-
-    const enquiry = {
-      id: `enq_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      partitionkey: "enquiry",
-      name,
-      email,
-      phone: sanitizeText(body.phone),
-      roomType: sanitizeText(body.roomType),
-      checkin: sanitizeText(body.checkin),
-      checkout: sanitizeText(body.checkout),
-      message: sanitizeText(body.message),
-      status: "new",
-      source: "website",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    const container = getCosmosContainer();
-    await container.items.create(enquiry);
-
-    context.res = {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-      body: {
-        success: true,
-        message: "Enquiry saved successfully.",
-        enquiryId: enquiry.id
-      }
-    };
+    return handlePost(context, req);
   } catch (error) {
-    context.log.error("Detailed Cosmos error:", error);
-    context.log.error("Cosmos enquiry API failed:", error);
-
+    context.log.error("Enquiry API error:", error);
     context.res = {
       status: 500,
       headers: { "Content-Type": "application/json" },
-      body: {
-        success: false,
-        error: error.message
-      }
+      body: { success: false, error: error.message }
     };
   }
 };
+
+async function handleGet(context, req) {
+  const container = getCosmosContainer();
+
+  const querySpec = {
+    query:
+      "SELECT * FROM c WHERE c.partitionkey = @pk ORDER BY c.createdAt DESC",
+    parameters: [{ name: "@pk", value: "enquiry" }]
+  };
+
+  const { resources: enquiries } = await container.items
+    .query(querySpec)
+    .fetchAll();
+
+  context.res = {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+    body: { success: true, enquiries }
+  };
+}
+
+async function handlePost(context, req) {
+  const body = req.body || {};
+
+  const name = sanitizeText(body.name);
+  const email = sanitizeText(body.email);
+
+  if (!name || !email) {
+    context.res = {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+      body: {
+        success: false,
+        error: "Name and email are required."
+      }
+    };
+    return;
+  }
+
+  const enquiry = {
+    id: `enq_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    partitionkey: "enquiry",
+    name,
+    email,
+    phone: sanitizeText(body.phone),
+    roomType: sanitizeText(body.roomType),
+    checkin: sanitizeText(body.checkin),
+    checkout: sanitizeText(body.checkout),
+    message: sanitizeText(body.message),
+    status: "new",
+    source: "website",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  const container = getCosmosContainer();
+  await container.items.create(enquiry);
+
+  context.res = {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+    body: {
+      success: true,
+      message: "Enquiry saved successfully.",
+      enquiryId: enquiry.id
+    }
+  };
+}
