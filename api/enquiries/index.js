@@ -4,8 +4,8 @@ let cosmosContainer;
 
 function getCosmosContainer() {
   const connectionString = process.env.COSMOS_CONNECTION_STRING;
-  const database = client.database("hotel-poc-db");
-  const container = database.container("enquiries");
+  const databaseId = process.env.COSMOS_DATABASE_ID || "hotel-poc-db";
+  const containerId = process.env.COSMOS_CONTAINER_ID || "enquiries";
 
   if (!connectionString || !databaseId || !containerId) {
     throw new Error(
