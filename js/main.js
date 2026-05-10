@@ -154,7 +154,13 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     message: document.getElementById('message').value
   };
 
-  DB.enquiries.add(enquiry);
+  fetch('/api/enquiries', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(enquiry)
+  });
 
   const successMsg = document.getElementById('form-success');
   successMsg.style.display = 'block';
