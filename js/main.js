@@ -142,31 +142,57 @@ function closeModal() {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // ── Contact form ─────────────────────────────────────────
-document.getElementById('contact-form').addEventListener('submit', function(e) {
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
   e.preventDefault();
 
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const successMsg = document.getElementById('form-success');
+
   const enquiry = {
-    name: document.getElementById('name').value,
-    email: document.getElementById('email').value,
+    name: document.getElementById('name').value.trim(),
+    email: document.getElementById('email').value.trim(),
     checkin: document.getElementById('checkin').value,
     checkout: document.getElementById('checkout').value,
     roomType: document.getElementById('room-type').value,
-    message: document.getElementById('message').value
+    message: document.getElementById('message').value.trim()
   };
 
-  fetch('/api/enquiries', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(enquiry)
-  });
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+  }
 
-  const successMsg = document.getElementById('form-success');
-  successMsg.style.display = 'block';
-  this.reset();
+  try {
+    const response = await fetch('/api/enquiries', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(enquiry)
+    });
 
-  setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok || result.success === false) {
+      throw new Error(result.error || 'Failed to submit enquiry.');
+    }
+
+    successMsg.textContent = 'Thank you! Your enquiry has been sent successfully.';
+    successMsg.style.display = 'block';
+    this.reset();
+
+    setTimeout(() => {
+      successMsg.style.display = 'none';
+    }, 5000);
+  } catch (err) {
+    console.error('Enquiry submit failed:', err);
+    alert('Sorry, we could not submit your enquiry right now. Please try again or call the hotel directly.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Enquiry';
+    }
+  }
 });
 
 // ── Set min date for date inputs ─────────────────────────
