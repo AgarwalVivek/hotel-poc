@@ -9,7 +9,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
-<body class="admin-body">
+<body class="admin-body" style="visibility:hidden;">
+  <script>
+    // Auth gate — redirect to login if no valid session
+    (function () {
+      var token = sessionStorage.getItem('admin_token');
+      if (!token) { window.location.href = 'login.html'; return; }
+      fetch('/api/admin-verify', { headers: { 'Authorization': 'Bearer ' + token } })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d.success) { sessionStorage.clear(); window.location.href = 'login.html'; }
+          else { document.body.style.visibility = 'visible'; }
+        })
+        .catch(function () {
+          // API unreachable — allow access with existing token (offline mode)
+          document.body.style.visibility = 'visible';
+        });
+    })();
+  </script>
 
   <div class="admin-layout">
 
@@ -25,6 +42,7 @@
         <button class="sidebar__link" data-tab="enquiries">📩 Enquiries</button>
         <button class="sidebar__link" data-tab="add-room">➕ Add Room</button>
       </nav>
+      <a href="#" class="sidebar__back" onclick="sessionStorage.clear();window.location.href='login.html';return false;">🔒 Logout</a>
       <a href="index.html" class="sidebar__back">← Back to Website</a>
     </aside>
 

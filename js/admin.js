@@ -12,7 +12,9 @@ async function fetchCosmosEnquiries(forceRefresh = false) {
 
   _cosmosLoading = true;
   try {
-    const res = await fetch('/api/enquiries');
+    const token = sessionStorage.getItem('admin_token');
+    const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+    const res = await fetch('/api/enquiries', { headers });
     const data = await res.json();
     if (data.success && Array.isArray(data.enquiries)) {
       _cosmosEnquiries = data.enquiries;

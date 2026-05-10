@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Mayfair Grand</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    .login-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #F0EDE8;
+    }
+    .login-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 3rem 2.5rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    .login-card__logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .login-card__logo-top {
+      font-family: var(--ff-serif);
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--dark);
+    }
+    .login-card__logo-sub {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
+    .login-card .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .login-card label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .login-card input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-family: var(--ff-sans);
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      background: var(--ivory);
+      outline: none;
+      transition: border 0.2s;
+    }
+    .login-card input:focus {
+      border-color: var(--gold);
+    }
+    .login-error {
+      display: none;
+      background: #FEF0F0;
+      border: 1px solid #E8AAAA;
+      color: #A32D2D;
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body class="admin-body">
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-card__logo">
+        <span class="login-card__logo-top">MAYFAIR</span>
+        <span class="login-card__logo-sub">Admin Login</span>
+      </div>
+
+      <div class="login-error" id="login-error"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-user">Username</label>
+          <input type="text" id="login-user" placeholder="Enter username" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label for="login-pass">Password</label>
+          <input type="password" id="login-pass" placeholder="Enter password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn--dark" id="login-btn" style="width:100%;padding:0.85rem">
+          Sign In
+        </button>
+      </form>
+
+      <a href="index.html" style="display:block;text-align:center;margin-top:1.5rem;font-size:0.8rem;color:var(--muted);text-decoration:none;">
+        ← Back to Website
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // If already logged in, redirect to admin
+    const existingToken = sessionStorage.getItem('admin_token');
+    if (existingToken) {
+      fetch('/api/admin-verify', {
+        headers: { 'Authorization': 'Bearer ' + existingToken }
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) window.location.href = 'admin.html';
+        })
+        .catch(() => {});
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const errorEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+      errorEl.style.display = 'none';
+
+      const username = document.getElementById('login-user').value.trim();
+      const password = document.getElementById('login-pass').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      try {
+        const res = await fetch('/api/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          errorEl.textContent = data.error || 'Login failed.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        sessionStorage.setItem('admin_token', data.token);
+        sessionStorage.setItem('admin_user', data.username);
+        window.location.href = 'admin.html';
+      } catch (err) {
+        errorEl.textContent = 'Could not reach server. Please try again.';
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    });
+  </script>
+</body>
+</html>
