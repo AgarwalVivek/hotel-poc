@@ -122,7 +122,7 @@ function openModal(roomId) {
           <div class="modal__price-tag">${formatPrice(room.price)}</div>
           <div class="modal__price-sub">per night, taxes included</div>
         </div>
-        <a href="#contact" class="btn btn--dark" style="width:auto;padding:0.75rem 1.75rem" onclick="overlay.classList.remove('open');document.getElementById('room-type').value='${room.type}'">Book Now</a>
+        <a href="#contact" class="btn btn--dark" style="width:auto;padding:0.75rem 1.75rem" onclick="closeModal();document.getElementById('room-type').value='${room.type}'">Book Now</a>
       </div>
     </div>
   `;

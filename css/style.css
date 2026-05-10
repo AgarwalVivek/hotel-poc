@@ -546,3 +546,12 @@ body {
   .director-name { font-size: 2rem; }
   .footer__info { flex-direction: column; gap: 0.4rem; }
 }
+html,
+body {
+  overflow-y: auto !important;
+  height: auto !important;
+}
+body.modal-open {
+  overflow: hidden;
+}
+
