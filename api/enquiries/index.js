@@ -73,6 +73,7 @@ module.exports = async function (context, req) {
       }
     };
   } catch (error) {
+    context.log.error("Detailed Cosmos error:", error);
     context.log.error("Cosmos enquiry API failed:", error);
 
     context.res = {
@@ -80,7 +81,7 @@ module.exports = async function (context, req) {
       headers: { "Content-Type": "application/json" },
       body: {
         success: false,
-        error: "Failed to save enquiry. Please try again later."
+        error: error.message
       }
     };
   }
