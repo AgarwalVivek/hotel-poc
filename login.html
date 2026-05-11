@@ -111,9 +111,7 @@
     // If already logged in, redirect to admin
     const existingToken = sessionStorage.getItem('admin_token');
     if (existingToken) {
-      fetch('/api/enquiries/verify', {
-        headers: { 'Authorization': 'Bearer ' + existingToken }
-      })
+      fetch('/api/enquiries/verify?token=' + encodeURIComponent(existingToken))
         .then(r => r.json())
         .then(data => {
           if (data.success) window.location.href = 'admin.html';

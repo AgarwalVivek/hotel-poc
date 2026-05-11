@@ -208,8 +208,11 @@ async function handleLogin(context, req) {
 // ── Admin verify handler ────────────────────────────────
 
 async function handleVerify(context, req) {
+  // Accept token from query param or Authorization header (SWA may strip headers)
   const authHeader = req.headers["authorization"] || "";
-  const token = authHeader.replace("Bearer ", "").trim();
+  const token =
+    (req.query && req.query.token) ||
+    authHeader.replace("Bearer ", "").trim();
 
   if (!token) {
     context.res = {
