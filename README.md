@@ -1,13 +1,13 @@
-# Mayfair Grand Hotel Website
+# The Golden Sun Hotel Website
 
-A luxury hotel website inspired by Mayfair Bhubaneswar, built in 3 phases.
+A luxury hotel website built in 3 phases.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-mayfair-hotel/
+hotel-website/
 ├── index.html          ← Main website
 ├── admin.html          ← Admin panel (manage rooms & enquiries)
 ├── css/
@@ -73,7 +73,7 @@ async getAll() {
 
 ### Step 3: Deploy to Netlify
 1. Create account at netlify.com
-2. Drag and drop the `mayfair-hotel/` folder
+2. Drag and drop the `hotel-website/` folder
 3. Site is live at `yoursite.netlify.app`
 4. Optional: Connect a free domain from Freenom
 
@@ -133,7 +133,7 @@ const rooms = {
 npm install -g @azure/static-web-apps-cli
 
 # Deploy
-swa deploy ./mayfair-hotel --app-name your-app-name
+swa deploy ./hotel-website --app-name your-app-name
 ```
 
 ---
@@ -149,6 +149,6 @@ In Phase 1, the admin panel is open. For production, add:
 ## 📞 Contacts Shown
 - Address: 1, Jaydev Vihar, Bhubaneswar, Odisha 751013
 - Phone: +91 674 255 3000
-- Email: reservations@mayfairgrand.com
+- Email: reservations@goldensunhotel.com
 
 Update these in `index.html` → Contact section.

@@ -10,8 +10,8 @@
  */
 
 const DB = (() => {
-  const ROOMS_KEY     = 'mayfair_rooms';
-  const ENQUIRIES_KEY = 'mayfair_enquiries';
+  const ROOMS_KEY     = 'goldensun_rooms';
+  const ENQUIRIES_KEY = 'goldensun_enquiries';
 
   // ── Default seed data ────────────────────────────────────
   const DEFAULT_ROOMS = [
