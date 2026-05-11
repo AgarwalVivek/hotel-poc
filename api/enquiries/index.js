@@ -1,4 +1,5 @@
 const { CosmosClient } = require("@azure/cosmos");
+const crypto = require("crypto");
 
 let cosmosContainer;
 
@@ -25,14 +26,38 @@ function sanitizeText(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function hashPassword(password, salt) {
+  return crypto
+    .pbkdf2Sync(password, salt, 100000, 64, "sha512")
+    .toString("hex");
+}
+
+function generateToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
 module.exports = async function (context, req) {
+  const action = context.bindingData.action || "";
+
   try {
-    if (req.method === "GET") {
-      return handleGet(context, req);
+    switch (action) {
+      case "login":
+        return handleLogin(context, req);
+      case "verify":
+        return handleVerify(context, req);
+      case "":
+        // Default: original enquiries behavior
+        if (req.method === "GET") return handleGetEnquiries(context, req);
+        return handlePostEnquiry(context, req);
+      default:
+        context.res = {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+          body: { success: false, error: "Unknown action." }
+        };
     }
-    return handlePost(context, req);
   } catch (error) {
-    context.log.error("Enquiry API error:", error);
+    context.log.error("API error:", error);
     context.res = {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -41,7 +66,9 @@ module.exports = async function (context, req) {
   }
 };
 
-async function handleGet(context, req) {
+// ── Enquiries handlers ──────────────────────────────────
+
+async function handleGetEnquiries(context, req) {
   const container = getCosmosContainer();
 
   const querySpec = {
@@ -61,7 +88,7 @@ async function handleGet(context, req) {
   };
 }
 
-async function handlePost(context, req) {
+async function handlePostEnquiry(context, req) {
   const body = req.body || {};
 
   const name = sanitizeText(body.name);
@@ -106,5 +133,132 @@ async function handlePost(context, req) {
       message: "Enquiry saved successfully.",
       enquiryId: enquiry.id
     }
+  };
+}
+
+// ── Admin login handler ─────────────────────────────────
+
+async function handleLogin(context, req) {
+  const body = req.body || {};
+  const username = (body.username || "").trim();
+  const password = (body.password || "").trim();
+
+  if (!username || !password) {
+    context.res = {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+      body: { success: false, error: "Username and password are required." }
+    };
+    return;
+  }
+
+  const container = getCosmosContainer();
+
+  const { resources } = await container.items
+    .query({
+      query:
+        "SELECT * FROM c WHERE c.partitionkey = @pk AND c.username = @user",
+      parameters: [
+        { name: "@pk", value: "admin_user" },
+        { name: "@user", value: username }
+      ]
+    })
+    .fetchAll();
+
+  if (resources.length === 0) {
+    context.res = {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+      body: { success: false, error: "Invalid username or password." }
+    };
+    return;
+  }
+
+  const adminUser = resources[0];
+  const hashedInput = hashPassword(password, adminUser.salt);
+
+  if (hashedInput !== adminUser.passwordHash) {
+    context.res = {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+      body: { success: false, error: "Invalid username or password." }
+    };
+    return;
+  }
+
+  const token = generateToken();
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+  await container.items.create({
+    id: `session_${token.slice(0, 12)}`,
+    partitionkey: "admin_session",
+    token,
+    username: adminUser.username,
+    createdAt: new Date().toISOString(),
+    expiresAt
+  });
+
+  context.res = {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+    body: { success: true, token, username: adminUser.username, expiresAt }
+  };
+}
+
+// ── Admin verify handler ────────────────────────────────
+
+async function handleVerify(context, req) {
+  const authHeader = req.headers["authorization"] || "";
+  const token = authHeader.replace("Bearer ", "").trim();
+
+  if (!token) {
+    context.res = {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+      body: { success: false, error: "No token provided." }
+    };
+    return;
+  }
+
+  const container = getCosmosContainer();
+
+  const { resources } = await container.items
+    .query({
+      query:
+        "SELECT * FROM c WHERE c.partitionkey = @pk AND c.token = @token",
+      parameters: [
+        { name: "@pk", value: "admin_session" },
+        { name: "@token", value: token }
+      ]
+    })
+    .fetchAll();
+
+  if (resources.length === 0) {
+    context.res = {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+      body: { success: false, error: "Invalid or expired session." }
+    };
+    return;
+  }
+
+  const session = resources[0];
+
+  if (new Date(session.expiresAt) < new Date()) {
+    context.res = {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+      body: {
+        success: false,
+        error: "Session expired. Please log in again."
+      }
+    };
+    return;
+  }
+
+  context.res = {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+    body: { success: true, username: session.username }
   };
 }
