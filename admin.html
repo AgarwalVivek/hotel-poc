@@ -15,7 +15,7 @@
     (function () {
       var token = sessionStorage.getItem('admin_token');
       if (!token) { window.location.href = 'login.html'; return; }
-      fetch('/api/admin-verify', { headers: { 'Authorization': 'Bearer ' + token } })
+      fetch('/api/admin/verify', { headers: { 'Authorization': 'Bearer ' + token } })
         .then(function (r) { return r.json(); })
         .then(function (d) {
           if (!d.success) { sessionStorage.clear(); window.location.href = 'login.html'; }

@@ -111,7 +111,7 @@
     // If already logged in, redirect to admin
     const existingToken = sessionStorage.getItem('admin_token');
     if (existingToken) {
-      fetch('/api/admin-verify', {
+      fetch('/api/admin/verify', {
         headers: { 'Authorization': 'Bearer ' + existingToken }
       })
         .then(r => r.json())
@@ -135,7 +135,7 @@
       btn.textContent = 'Signing in...';
 
       try {
-        const res = await fetch('/api/admin-login', {
+        const res = await fetch('/api/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password })
