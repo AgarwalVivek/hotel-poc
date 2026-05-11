@@ -87,7 +87,7 @@
 
       <div class="login-error" id="login-error"></div>
 
-      <form id="login-form">
+      <form id="login-form" novalidate>
         <div class="form-group">
           <label for="login-user">Username</label>
           <input type="text" id="login-user" placeholder="Enter username" required autocomplete="username" />
@@ -96,7 +96,7 @@
           <label for="login-pass">Password</label>
           <input type="password" id="login-pass" placeholder="Enter password" required autocomplete="current-password" />
         </div>
-        <button type="submit" class="btn btn--dark" id="login-btn" style="width:100%;padding:0.85rem">
+        <button type="submit" class="btn btn--dark" id="login-btn" style="width:100%;padding:0.85rem;cursor:pointer;">
           Sign In
         </button>
       </form>
@@ -130,6 +130,12 @@
 
       const username = document.getElementById('login-user').value.trim();
       const password = document.getElementById('login-pass').value;
+
+      if (!username || !password) {
+        errorEl.textContent = 'Please enter both username and password.';
+        errorEl.style.display = 'block';
+        return;
+      }
 
       btn.disabled = true;
       btn.textContent = 'Signing in...';
