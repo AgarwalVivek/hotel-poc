@@ -40,6 +40,7 @@
         <button class="sidebar__link active" data-tab="dashboard">📊 Dashboard</button>
         <button class="sidebar__link" data-tab="rooms">🛏️ Rooms</button>
         <button class="sidebar__link" data-tab="enquiries">📩 Enquiries</button>
+        <button class="sidebar__link" data-tab="events">🎉 Events</button>
         <button class="sidebar__link" data-tab="add-room">➕ Add Room</button>
       </nav>
       <a href="#" class="sidebar__back" onclick="sessionStorage.clear();window.location.href='login.html';return false;">🔒 Logout</a>
@@ -76,6 +77,77 @@
       <section class="tab-pane" id="tab-enquiries">
         <h1 class="admin-title">Enquiries</h1>
         <div id="enquiries-list"></div>
+      </section>
+
+      <!-- EVENTS TAB -->
+      <section class="tab-pane" id="tab-events">
+        <h1 class="admin-title">Event Registry</h1>
+        <div class="admin-toolbar">
+          <button class="btn btn--dark" style="width:auto;padding:0.6rem 1.5rem" onclick="showAddEventForm()">+ Create Event</button>
+        </div>
+
+        <!-- Add/Edit Event Form (hidden by default) -->
+        <div id="event-form-wrap" class="admin-card" style="display:none">
+          <h3 class="admin-card__title" id="event-form-title">Create Event</h3>
+          <form id="event-form">
+            <input type="hidden" id="evt-edit-id" />
+            <div class="form-row">
+              <div class="form-group">
+                <label>Event Name</label>
+                <input type="text" id="evt-name" placeholder="e.g. Wedding Reception" required />
+              </div>
+              <div class="form-group">
+                <label>Event Date</label>
+                <input type="date" id="evt-date" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="evt-desc" rows="2" placeholder="Brief description of the event..."></textarea>
+            </div>
+            <div style="display:flex;gap:1rem;margin-top:1rem">
+              <button type="submit" class="btn btn--dark" style="width:auto;padding:0.6rem 1.5rem">Save Event</button>
+              <button type="button" class="btn btn--outline" style="padding:0.6rem 1.5rem" onclick="hideEventForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Events List -->
+        <div id="events-list"></div>
+
+        <!-- Add Product Form (shown when managing an event) -->
+        <div id="product-form-wrap" class="admin-card" style="display:none">
+          <h3 class="admin-card__title">Add Amazon Product to: <span id="product-event-name"></span></h3>
+          <form id="product-form">
+            <input type="hidden" id="prod-event-id" />
+            <div class="form-row">
+              <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" id="prod-name" placeholder="e.g. KitchenAid Stand Mixer" required />
+              </div>
+              <div class="form-group">
+                <label>Price (optional)</label>
+                <input type="text" id="prod-price" placeholder="e.g. ₹25,999" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Amazon URL</label>
+              <input type="url" id="prod-url" placeholder="https://www.amazon.in/dp/..." required />
+            </div>
+            <div class="form-group">
+              <label>Product Image URL (optional)</label>
+              <input type="url" id="prod-image" placeholder="https://m.media-amazon.com/images/..." />
+            </div>
+            <div style="display:flex;gap:1rem;margin-top:1rem">
+              <button type="submit" class="btn btn--dark" style="width:auto;padding:0.6rem 1.5rem">Add Product</button>
+              <button type="button" class="btn btn--outline" style="padding:0.6rem 1.5rem" onclick="hideProductForm()">Cancel</button>
+            </div>
+            <p id="product-save-msg" style="display:none;color:#2a7c4f;margin-top:0.75rem;font-size:0.875rem">✓ Product added!</p>
+          </form>
+        </div>
+
+        <!-- Registry items for selected event -->
+        <div id="registry-admin-list"></div>
       </section>
 
       <!-- ADD ROOM TAB -->

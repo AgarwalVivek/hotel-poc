@@ -48,6 +48,7 @@ function showTab(name) {
   if (name === 'dashboard') loadDashboard();
   if (name === 'rooms') loadRoomsTab();
   if (name === 'enquiries') { fetchCosmosEnquiries(true).then(() => loadEnquiriesTab()); }
+  if (name === 'events') loadEventsTab();
 }
 
 document.querySelectorAll('.sidebar__link').forEach(btn => {
@@ -316,3 +317,192 @@ function loadEnquiriesTab() {
 
 // ── Init ─────────────────────────────────────────────────
 // Initial loadDashboard is triggered by fetchCosmosEnquiries().then() at the top
+
+// ── Events Tab ───────────────────────────────────────────
+let _activeEventId = null;
+
+function showAddEventForm() {
+  document.getElementById('event-form-wrap').style.display = 'block';
+  document.getElementById('event-form-title').textContent = 'Create Event';
+  document.getElementById('evt-edit-id').value = '';
+  document.getElementById('event-form').reset();
+}
+
+function hideEventForm() {
+  document.getElementById('event-form-wrap').style.display = 'none';
+}
+
+function hideProductForm() {
+  document.getElementById('product-form-wrap').style.display = 'none';
+  document.getElementById('registry-admin-list').innerHTML = '';
+}
+
+document.getElementById('event-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('evt-name').value.trim(),
+    date: document.getElementById('evt-date').value,
+    description: document.getElementById('evt-desc').value.trim()
+  };
+
+  const editId = document.getElementById('evt-edit-id').value;
+  if (editId) {
+    DB.events.update(editId, data);
+  } else {
+    DB.events.add(data);
+  }
+
+  hideEventForm();
+  loadEventsTab();
+});
+
+function loadEventsTab() {
+  const events = DB.events.getAll();
+  const container = document.getElementById('events-list');
+
+  if (events.length === 0) {
+    container.innerHTML = '<div class="admin-card"><p style="color:var(--muted)">No events yet. Create one to start building a gift registry.</p></div>';
+    return;
+  }
+
+  container.innerHTML = events.map(evt => {
+    const items = DB.registry.getByEvent(evt.id);
+    const booked = items.filter(i => i.status === 'gone').length;
+    const dateStr = evt.date ? new Date(evt.date + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+
+    return `
+      <div class="admin-card" style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem">
+          <div>
+            <h3 style="font-family:var(--ff-serif);font-size:1.3rem;font-weight:400;margin:0">${evt.name}</h3>
+            <p style="font-size:0.8rem;color:var(--muted);margin-top:0.25rem">📅 ${dateStr} &nbsp;|&nbsp; 🎁 ${items.length} products (${booked} claimed)</p>
+            ${evt.description ? `<p style="font-size:0.85rem;color:#555;margin-top:0.4rem">${evt.description}</p>` : ''}
+          </div>
+          <div class="action-btns">
+            <button class="action-btn" onclick="manageEventProducts('${evt.id}')">🎁 Products</button>
+            <button class="action-btn" onclick="editEvent('${evt.id}')">Edit</button>
+            <button class="action-btn action-btn--danger" onclick="deleteEvent('${evt.id}')">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function editEvent(id) {
+  const evt = DB.events.getById(id);
+  if (!evt) return;
+  document.getElementById('evt-edit-id').value = evt.id;
+  document.getElementById('evt-name').value = evt.name;
+  document.getElementById('evt-date').value = evt.date || '';
+  document.getElementById('evt-desc').value = evt.description || '';
+  document.getElementById('event-form-wrap').style.display = 'block';
+  document.getElementById('event-form-title').textContent = 'Edit Event';
+}
+
+function deleteEvent(id) {
+  if (confirm('Delete this event and all its registry products?')) {
+    DB.events.delete(id);
+    hideProductForm();
+    loadEventsTab();
+  }
+}
+
+function manageEventProducts(eventId) {
+  _activeEventId = eventId;
+  const evt = DB.events.getById(eventId);
+  if (!evt) return;
+
+  document.getElementById('product-form-wrap').style.display = 'block';
+  document.getElementById('product-event-name').textContent = evt.name;
+  document.getElementById('prod-event-id').value = eventId;
+  document.getElementById('product-form').reset();
+
+  loadRegistryAdmin(eventId);
+}
+
+document.getElementById('product-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const item = {
+    eventId: document.getElementById('prod-event-id').value,
+    name: document.getElementById('prod-name').value.trim(),
+    price: document.getElementById('prod-price').value.trim(),
+    amazonUrl: document.getElementById('prod-url').value.trim(),
+    image: document.getElementById('prod-image').value.trim() || null
+  };
+
+  DB.registry.add(item);
+
+  const msg = document.getElementById('product-save-msg');
+  msg.style.display = 'block';
+  setTimeout(() => { msg.style.display = 'none'; }, 2500);
+
+  this.reset();
+  document.getElementById('prod-event-id').value = item.eventId;
+  loadRegistryAdmin(item.eventId);
+  loadEventsTab();
+});
+
+function loadRegistryAdmin(eventId) {
+  const items = DB.registry.getByEvent(eventId);
+  const container = document.getElementById('registry-admin-list');
+
+  if (items.length === 0) {
+    container.innerHTML = '<div class="admin-card"><p style="color:var(--muted)">No products in this registry yet. Add some above.</p></div>';
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="admin-card" style="padding:0;overflow:hidden">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Booked By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(item => `
+            <tr>
+              <td>
+                <a href="${item.amazonUrl}" target="_blank" rel="noopener" style="color:var(--dark);text-decoration:underline;font-weight:500">${item.name}</a>
+              </td>
+              <td>${item.price || '—'}</td>
+              <td>
+                <span class="badge ${item.status === 'gone' ? 'badge--closed' : 'badge--read'}">
+                  ${item.status === 'gone' ? 'Gone' : 'Available'}
+                </span>
+              </td>
+              <td style="font-size:0.82rem">
+                ${item.bookedBy ? `${item.bookedBy}<br/><span style="color:var(--muted)">${item.bookedEmail}</span>` : '—'}
+              </td>
+              <td>
+                <div class="action-btns">
+                  ${item.status === 'gone' ? `<button class="action-btn" onclick="unbookProduct('${item.id}','${eventId}')">Restore</button>` : ''}
+                  <button class="action-btn action-btn--danger" onclick="deleteProduct('${item.id}','${eventId}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function unbookProduct(id, eventId) {
+  DB.registry.unbook(id);
+  loadRegistryAdmin(eventId);
+  loadEventsTab();
+}
+
+function deleteProduct(id, eventId) {
+  if (confirm('Delete this product from the registry?')) {
+    DB.registry.delete(id);
+    loadRegistryAdmin(eventId);
+    loadEventsTab();
+  }
+}

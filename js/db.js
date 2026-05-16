@@ -191,5 +191,92 @@ const DB = (() => {
     }
   };
 
-  return { rooms, enquiries };
+  // ── Events API ───────────────────────────────────────────
+  const EVENTS_KEY   = 'goldensun_events';
+  const REGISTRY_KEY = 'goldensun_registry';
+
+  const events = {
+    getAll() {
+      return JSON.parse(localStorage.getItem(EVENTS_KEY)) || [];
+    },
+    getById(id) {
+      return this.getAll().find(e => e.id === id);
+    },
+    add(event) {
+      const all = this.getAll();
+      event.id = 'evt_' + Date.now();
+      event.createdAt = new Date().toISOString();
+      all.push(event);
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(all));
+      return event;
+    },
+    update(id, updates) {
+      const all = this.getAll();
+      const idx = all.findIndex(e => e.id === id);
+      if (idx === -1) return null;
+      all[idx] = { ...all[idx], ...updates };
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(all));
+      return all[idx];
+    },
+    delete(id) {
+      const all = this.getAll().filter(e => e.id !== id);
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(all));
+      // Also delete all registry items for this event
+      const reg = registry.getAll().filter(r => r.eventId !== id);
+      localStorage.setItem(REGISTRY_KEY, JSON.stringify(reg));
+    }
+  };
+
+  // ── Registry (Products) API ─────────────────────────────
+  const registry = {
+    getAll() {
+      return JSON.parse(localStorage.getItem(REGISTRY_KEY)) || [];
+    },
+    getByEvent(eventId) {
+      return this.getAll().filter(r => r.eventId === eventId);
+    },
+    getById(id) {
+      return this.getAll().find(r => r.id === id);
+    },
+    add(item) {
+      const all = this.getAll();
+      item.id = 'reg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      item.status = 'available';
+      item.bookedBy = null;
+      item.bookedEmail = null;
+      item.bookedAt = null;
+      all.push(item);
+      localStorage.setItem(REGISTRY_KEY, JSON.stringify(all));
+      return item;
+    },
+    book(id, name, email) {
+      const all = this.getAll();
+      const idx = all.findIndex(r => r.id === id);
+      if (idx === -1) return null;
+      if (all[idx].status === 'gone') return null;
+      all[idx].status = 'gone';
+      all[idx].bookedBy = name;
+      all[idx].bookedEmail = email;
+      all[idx].bookedAt = new Date().toISOString();
+      localStorage.setItem(REGISTRY_KEY, JSON.stringify(all));
+      return all[idx];
+    },
+    unbook(id) {
+      const all = this.getAll();
+      const idx = all.findIndex(r => r.id === id);
+      if (idx === -1) return null;
+      all[idx].status = 'available';
+      all[idx].bookedBy = null;
+      all[idx].bookedEmail = null;
+      all[idx].bookedAt = null;
+      localStorage.setItem(REGISTRY_KEY, JSON.stringify(all));
+      return all[idx];
+    },
+    delete(id) {
+      const all = this.getAll().filter(r => r.id !== id);
+      localStorage.setItem(REGISTRY_KEY, JSON.stringify(all));
+    }
+  };
+
+  return { rooms, enquiries, events, registry };
 })();

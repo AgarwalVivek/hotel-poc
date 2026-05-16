@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gift Registry — The Golden Sun</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/registry.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav scrolled" id="navbar">
+    <div class="nav__logo">
+      <span class="nav__logo-top">THE GOLDEN SUN</span>
+      <span class="nav__logo-sub">JHARSUGUDA</span>
+    </div>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#rooms">Rooms</a></li>
+      <li><a href="registry.html" style="color:var(--gold-lt)">Registry</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="login.html" class="nav__admin">Admin</a></li>
+    </ul>
+    <button class="nav__burger" id="burger" aria-label="Menu">&#9776;</button>
+  </nav>
+
+  <!-- REGISTRY HERO -->
+  <header class="registry-hero">
+    <div class="registry-hero__overlay"></div>
+    <div class="registry-hero__content">
+      <p class="registry-hero__eyebrow">Celebrate With Us</p>
+      <h1 class="registry-hero__title">Event Gift Registry</h1>
+      <p class="registry-hero__sub">Browse our events and gift a cherished item from Amazon</p>
+    </div>
+  </header>
+
+  <!-- EVENTS LISTING -->
+  <section class="section" id="events-section">
+    <div id="events-container"></div>
+  </section>
+
+  <!-- BOOKING MODAL -->
+  <div class="modal-overlay" id="book-modal-overlay">
+    <div class="modal" id="book-modal" style="max-width:440px">
+      <button class="modal__close" id="book-modal-close">&times;</button>
+      <div style="padding:2rem 2.5rem">
+        <h2 style="font-family:var(--ff-serif);font-size:1.6rem;font-weight:400;margin-bottom:0.25rem">Claim This Gift</h2>
+        <p id="book-product-name" style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem"></p>
+        <form id="book-form">
+          <input type="hidden" id="book-item-id" />
+          <div class="form-group">
+            <label for="book-name">Your Name</label>
+            <input type="text" id="book-name" placeholder="Full name" required />
+          </div>
+          <div class="form-group">
+            <label for="book-email">Your Email</label>
+            <input type="email" id="book-email" placeholder="your@email.com" required />
+          </div>
+          <button type="submit" class="btn btn--dark" style="margin-top:0.5rem">Confirm Booking</button>
+          <p id="book-success" style="display:none;color:#2a7c4f;margin-top:1rem;font-size:0.875rem;text-align:center">✓ Gift claimed! Thank you for your generosity.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__logo">THE GOLDEN SUN</div>
+    <p class="footer__tag">Luxury Redefined · Jharsuguda</p>
+    <p class="footer__copy">&copy; 2025 The Golden Sun, Jharsuguda. All rights reserved.</p>
+  </footer>
+
+  <script src="js/db.js"></script>
+  <script src="js/registry.js"></script>
+</body>
+</html>
