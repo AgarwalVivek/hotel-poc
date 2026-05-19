@@ -204,5 +204,17 @@ document.getElementById('checkin').addEventListener('change', function() {
   document.getElementById('checkout').min = this.value;
 });
 
+// ── Scroll Reveal Animations ─────────────────────────────
+const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+revealElements.forEach(el => revealObserver.observe(el));
+
 // ── Init ─────────────────────────────────────────────────
 renderRooms('all');
