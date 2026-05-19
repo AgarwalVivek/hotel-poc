@@ -120,10 +120,12 @@ bookForm.addEventListener('submit', function(e) {
 
   if (result) {
     document.getElementById('book-success').style.display = 'block';
+    bookForm.querySelector('button[type="submit"]').disabled = true;
     setTimeout(() => {
       closeBookModal();
+      bookForm.querySelector('button[type="submit"]').disabled = false;
       renderRegistry();
-    }, 1500);
+    }, 1200);
   } else {
     alert('This gift has already been claimed by someone else.');
     closeBookModal();

@@ -10,7 +10,7 @@
   --gold-lt:  #D4B483;
   --dark:     #1C1A16;
   --dark-2:   #2E2B24;
-  --muted:    #7A7468;
+  --muted:    #5A5549;
   --white:    #FFFFFF;
   --border:   rgba(184, 147, 90, 0.25);
   --ff-serif: 'Cormorant Garamond', Georgia, serif;
@@ -26,7 +26,7 @@ body {
   font-family: var(--ff-sans);
   background: var(--ivory);
   color: var(--dark);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.7;
   font-weight: 300;
 }
@@ -120,7 +120,7 @@ body {
 }
 .hero__title em { font-style: italic; color: var(--gold-lt); }
 .hero__sub {
-  font-size: 1rem; color: rgba(255,255,255,0.65);
+  font-size: 1.1rem; color: rgba(255,255,255,0.8);
   margin-bottom: 2.5rem; font-weight: 300;
 }
 .hero__scroll {
@@ -191,7 +191,7 @@ body {
   margin-bottom: 1rem;
 }
 .section--dark .section__title { color: var(--white); }
-.section__desc { color: var(--muted); font-size: 0.95rem; }
+.section__desc { color: var(--dark-2); font-size: 1.05rem; }
 
 /* ── ROOMS FILTER ────────────────────────────────────────── */
 .rooms-filter {
@@ -304,13 +304,13 @@ body {
   transition: background var(--transition);
 }
 .amenity-card:hover { background: rgba(255,255,255,0.08); }
-.amenity-card__icon { font-size: 1.75rem; margin-bottom: 1rem; }
+.amenity-card__icon { font-size: 1.75rem; margin-bottom: 1rem; color: var(--gold); }
 .amenity-card h3 {
   font-family: var(--ff-serif);
   font-size: 1.2rem; font-weight: 400;
   color: var(--white); margin-bottom: 0.5rem;
 }
-.amenity-card p { font-size: 0.875rem; color: rgba(255,255,255,0.5); }
+.amenity-card p { font-size: 0.95rem; color: rgba(255,255,255,0.65); }
 
 /* ── CONTACT ─────────────────────────────────────────────── */
 .contact-layout {
@@ -331,7 +331,7 @@ body {
   color: var(--gold);
   margin-bottom: 0.4rem;
 }
-.contact-info a { color: var(--dark); text-decoration: none; }
+.contact-info a { color: var(--dark); text-decoration: none; font-size: 1rem; }
 .contact-info a:hover { color: var(--gold); }
 .contact-form__title {
   font-family: var(--ff-serif);
@@ -494,9 +494,10 @@ body {
   color: var(--dark);
 }
 .director-location {
-  font-size: 0.85rem;
-  color: var(--muted);
+  font-size: 1.15rem;
+  color: var(--dark);
   margin-bottom: 1.5rem;
+  font-weight: 400;
 }
 .director-divider {
   width: 48px;
@@ -505,8 +506,8 @@ body {
   margin-bottom: 1.5rem;
 }
 .director-bio {
-  font-size: 0.95rem;
-  color: var(--muted);
+  font-size: 1rem;
+  color: var(--dark-2);
   line-height: 1.85;
   margin-bottom: 1rem;
 }
@@ -518,12 +519,12 @@ body {
   justify-content: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-  font-size: 0.82rem;
-  color: rgba(255,255,255,0.45);
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.6);
   margin-bottom: 0.6rem;
 }
 .footer__info a {
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.6);
   text-decoration: none;
   transition: color var(--transition);
 }
@@ -554,4 +555,27 @@ body {
 body.modal-open {
   overflow: hidden;
 }
+
+/* ── ABOUT BUSINESS SECTION ─────────────────────────────── */
+.section--about-business {
+  padding: 5rem 3rem 3rem;
+  background: var(--ivory-2);
+}
+.section--about-business .section__desc {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  max-width: 780px;
+  margin: 0 auto;
+  color: var(--dark-2);
+}
+
+/* ── LOGO PROMINENCE ────────────────────────────────────── */
+.nav__logo-top {
+  font-family: var(--ff-serif);
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--white);
+}
+
 

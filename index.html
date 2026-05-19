@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Golden Sun — Jharsuguda</title>
+  <link rel="icon" type="image/png" href="images/favicon.png" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -20,9 +21,8 @@
       <li><a href="#rooms">Rooms</a></li>
       <li><a href="#amenities">Amenities</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#contact">Contact Us</a></li>
       <li><a href="registry.html">Registry</a></li>
-      <li><a href="login.html" class="nav__admin">Admin</a></li>
     </ul>
     <button class="nav__burger" id="burger" aria-label="Menu">&#9776;</button>
   </nav>
@@ -34,10 +34,19 @@
       <p class="hero__eyebrow">Welcome to</p>
       <h1 class="hero__title">A Palace<br /><em>of Serenity</em></h1>
       <p class="hero__sub">Experience the finest luxury hospitality in the heart of Jharsuguda</p>
-      <a href="#rooms" class="btn btn--light">Explore Rooms</a>
+      <a href="#rooms" class="btn btn--light">Explore Hotel</a>
     </div>
     <div class="hero__scroll">scroll</div>
   </header>
+
+  <!-- ABOUT THE HOTEL -->
+  <section class="section section--about-business" id="about-hotel">
+    <div class="section__header">
+      <p class="section__eyebrow">Who We Are</p>
+      <h2 class="section__title">The Golden Sun Hotel</h2>
+      <p class="section__desc">Nestled in the heart of Jharsuguda, Odisha, The Golden Sun is a premium luxury hotel offering world-class hospitality rooted in the rich traditions of Odishan culture. Whether you're visiting for business, leisure, or celebrations, we deliver an unforgettable experience with elegant rooms, fine dining, and warm, personalized service.</p>
+    </div>
+  </section>
 
   <!-- ROOMS SECTION -->
   <section class="section" id="rooms">
@@ -63,60 +72,34 @@
     </div>
     <div class="amenities-grid">
       <div class="amenity-card">
-        <div class="amenity-card__icon">🍽️</div>
+        <div class="amenity-card__icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13h18M5 17h14M7 21h10M12 3c-3 0-5 2-5 5h10c0-3-2-5-5-5z"/></svg></div>
         <h3>Fine Dining</h3>
         <p>Multi-cuisine restaurant with curated menus by award-winning chefs.</p>
       </div>
       <div class="amenity-card">
-        <div class="amenity-card__icon">♨️</div>
+        <div class="amenity-card__icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 3c0 4-3 6-3 9s1.5 5 3 5 3-2 3-5-3-5-3-9z"/></svg></div>
         <h3>Spa & Wellness</h3>
         <p>Full-service spa with Ayurvedic treatments and heated pool.</p>
       </div>
       <div class="amenity-card">
-        <div class="amenity-card__icon">🏋️</div>
+        <div class="amenity-card__icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="14" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="14" rx="1"/><rect x="18" y="4" width="4" height="18" rx="1"/></svg></div>
         <h3>Fitness Centre</h3>
         <p>State-of-the-art gymnasium open 24 hours for our guests.</p>
       </div>
       <div class="amenity-card">
-        <div class="amenity-card__icon">🎪</div>
+        <div class="amenity-card__icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 10h.01M15 10h.01"/></svg></div>
         <h3>Banquet Hall</h3>
         <p>Grand venue for weddings, conferences, and private events.</p>
       </div>
       <div class="amenity-card">
-        <div class="amenity-card__icon">🌿</div>
+        <div class="amenity-card__icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22c-4 0-8-2-8-6 0-3 2-5 4-7 1-1 2-3 2-5 0 3 1 4 2 5 2 2 4 4 4 7 0 4-4 6-4 6z"/><path d="M12 22c-1.5 0-3-1-3-3 0-1.5 1-2.5 2-3.5.5-.5 1-1.5 1-2.5 0 1.5.5 2 1 2.5 1 1 2 2 2 3.5 0 2-1.5 3-3 3z"/></svg></div>
         <h3>Garden Terrace</h3>
         <p>Landscaped gardens for morning walks and evening gatherings.</p>
       </div>
       <div class="amenity-card">
-        <div class="amenity-card__icon">🚗</div>
+        <div class="amenity-card__icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M6 11V7a6 6 0 0 1 12 0v4M12 15v2"/></svg></div>
         <h3>Valet Parking</h3>
         <p>Complimentary valet service and airport transfers available.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT / DIRECTOR -->
-  <section class="section" id="about">
-    <div class="section__header">
-      <p class="section__eyebrow">Leadership</p>
-      <h2 class="section__title">Meet Our Director</h2>
-    </div>
-    <div class="about-layout">
-      <div class="director-photo-wrap">
-        <img src="images/director.png" alt="Subhashish Agarwal — Director" class="director-photo" />
-        <div class="director-photo-accent"></div>
-      </div>
-      <div class="director-info">
-        <p class="director-eyebrow">Director</p>
-        <h2 class="director-name">Subhashish Agarwal</h2>
-        <p class="director-location">📍 Goshala, Sambalpur</p>
-        <div class="director-divider"></div>
-        <p class="director-bio">
-          With a passion for hospitality and a commitment to excellence, Subhashish Agarwal leads The Golden Sun with a vision to bring world-class luxury to the heart of Odisha. Under his direction, the hotel has grown into a landmark of refined comfort and warm service in Jharsuguda.
-        </p>
-        <p class="director-bio">
-          His dedication to guest experience, rooted in the traditions of Odishan hospitality, ensures every visitor feels truly at home — pampered and valued from arrival to departure.
-        </p>
       </div>
     </div>
   </section>
@@ -125,7 +108,7 @@
   <section class="section section--ivory" id="contact">
     <div class="section__header">
       <p class="section__eyebrow">Reach Us</p>
-      <h2 class="section__title">Contact & Booking</h2>
+      <h2 class="section__title">Contact Us</h2>
     </div>
     <div class="contact-layout">
       <div class="contact-info">
@@ -184,6 +167,32 @@
         <button type="submit" class="btn btn--dark">Send Enquiry</button>
         <p class="form-success" id="form-success">✓ Enquiry sent! We'll get back to you within 24 hours.</p>
       </form>
+    </div>
+  </section>
+
+  <!-- ABOUT / DIRECTOR -->
+  <section class="section" id="about">
+    <div class="section__header">
+      <p class="section__eyebrow">Leadership</p>
+      <h2 class="section__title">Meet Our Director</h2>
+    </div>
+    <div class="about-layout">
+      <div class="director-photo-wrap">
+        <img src="images/director.png" alt="Subhashish Agarwal — Director" class="director-photo" />
+        <div class="director-photo-accent"></div>
+      </div>
+      <div class="director-info">
+        <p class="director-eyebrow">Director</p>
+        <h2 class="director-name">Subhashish Agarwal</h2>
+        <p class="director-location">📍 Goshala, Sambalpur, Odisha, India</p>
+        <div class="director-divider"></div>
+        <p class="director-bio">
+          With a passion for hospitality and a commitment to excellence, Subhashish Agarwal leads The Golden Sun with a vision to bring world-class luxury to the heart of Odisha. Under his direction, the hotel has grown into a landmark of refined comfort and warm service in Jharsuguda.
+        </p>
+        <p class="director-bio">
+          His dedication to guest experience, rooted in the traditions of Odishan hospitality, ensures every visitor feels truly at home — pampered and valued from arrival to departure.
+        </p>
+      </div>
     </div>
   </section>
 
